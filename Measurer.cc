@@ -12,18 +12,20 @@
 
 Measurer::Measurer()
 {
+  encoders.getCountsAndResetLeft();
+  encoders.getCountsAndResetRight();
 }
 
 bool Measurer::driveForward(int d) 
 {
   targetTicks = d;
-  static bool started = false;
+  // static bool started = false;
 
-  if (!started) {
-    encoders.getCountsAndResetLeft();
-    encoders.getCountsAndResetRight();
-    started = true;
-  }
+  // if (!started) {
+  //   encoders.getCountsAndResetLeft();
+  //   encoders.getCountsAndResetRight();
+  //   started = true;
+  // }
 
   int16_t countsLeft = encoders.getCountsLeft();
   int16_t countsRight = encoders.getCountsRight();
