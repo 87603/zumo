@@ -2,12 +2,14 @@
 #include <Wire.h>
 #include "Motors.h"
 
-class Measurer {
+class Turner {
 private:
   Zumo32U4Encoders encoders;
   Motors *motor;
-  int targetTicks;
+  bool turnDirection;
+  int ticksNeeded;
 public:
-  Measurer();
-  bool driveForward(int);
+  Turner();
+  void startTurn(int);
+  bool update();
 };

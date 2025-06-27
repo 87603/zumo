@@ -28,31 +28,23 @@ bool Measurer::driveForward(int d)
   int16_t countsLeft = encoders.getCountsLeft();
   int16_t countsRight = encoders.getCountsRight();
 
-  Serial.print("Ticks links: ");
-  Serial.println(countsLeft);
-  Serial.print("Ticks rechts: ");
-  Serial.println(countsRight);
+
 
   int16_t averageTicks = (countsLeft + countsRight) / 2;
-  float afstand = (averageTicks / 909.0) * 3.14159 * 2.52;
 
 
   if (averageTicks >= targetTicks) {
-    motor.stop();
-    Serial.print("Afstand (cm): ");
-    Serial.println(afstand);
+    motor->stop();
+    Serial.print("Ticks links: ");
+    Serial.println(countsLeft);
+    Serial.print("Ticks rechts: ");
+    Serial.println(countsRight);
     started = false;   
     return true;
   }
 
-  int16_t verschil = countsLeft - countsRight;
 
-  // if (verschil > 2 || verschil < -2) {
-  //   motor.forwardTurn(100, verschil);
-  // } else {
-  //   motor.driveForward(100);
-  // }
-    motor.tankTurn(100);
+  motor->driveForward(200);
 
   return false;
 }
