@@ -1,6 +1,6 @@
 #include "Turner.h"
 
-Turner::Turner()
+Turner::Turner(Motors* m) : motor(m)
 {
   encoders.getCountsAndResetLeft();
   encoders.getCountsAndResetRight();
@@ -8,7 +8,7 @@ Turner::Turner()
 
 void Turner::startTurn(int degrees)
 {
-    float afstand = (3.14159 * 10 * degrees) / 360.0; // pi * wheelbase
+    float afstand = (3.14159 * 10 * degrees) / (2 * 360.0); // pi * wheelbase
     float omtrek = 3.14159 * 2.5; // pi * wiel diameter
 
     ticksNeeded = (afstand / omtrek) * 909;
@@ -17,9 +17,10 @@ void Turner::startTurn(int degrees)
 
 bool Turner::update()
 {
-    int l = abs(encoders.getCountsLeft());
-  int r = abs(encoders.getCountsRight());
-  int delta = (l + r) / 2;
+  //abs want de wielen draaien tegenovergesteld, met abs wordt alleen afstand gemeten
+  int left = abs(encoders.getCountsLeft());
+  int right = abs(encoders.getCountsRight());
+  int delta = (left + right) / 2;
 
   if (delta >= ticksNeeded) {
     motor->stop();
@@ -27,9 +28,9 @@ bool Turner::update()
   }
 
   if (turnDirection) {
-    motor->tankTurn(100);
+    motor->tankTurn(300);
   } else {
-    motor->tankTurn(-100);
+    motor->tankTurn(-300);
   }
     return false;
 }

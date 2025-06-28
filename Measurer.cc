@@ -10,43 +10,60 @@
 
 #include "Measurer.h"
 
-Measurer::Measurer()
+Measurer::Measurer(Motors *m) : motor(m)
 {
-  encoders.getCountsAndResetLeft();
-  encoders.getCountsAndResetRight();
+  int16_t countsLeft = 0;
+  int16_t countsRight = 0;
 }
 
 bool Measurer::driveForward(int d) 
 {
-  targetTicks = d;
-  // static bool started = false;
+  //reken afstand om naar ticks
+  static bool started = false;
 
-  // if (!started) {
-  //   encoders.getCountsAndResetLeft();
-  //   encoders.getCountsAndResetRight();
-  //   started = true;
-  // }
+  if (!started) {
+    /*! bereken target ticks, gebruik gegeven afstand, deel door pi keer diameter wiel en keer 409. 
+    909 is aantalticks van volledige rotatoei van het wiel. 409 om te stoppen
+    wanneer de bumper het doel heeft bereikt. 
+    */
+    targetTicks = (d / (3.14159 * 2.5)) * 409;
 
+    encoders.getCountsAndResetLeft();
+    encoders.getCountsAndResetRight();
+    motor->driveForward(200);
+    started = true;
+
+  }
+
+  // done roept update() aan en checkt of true wordt geretourneerd
+  // true = stoppen
+  bool done = update();
+  if (done) {
+    motor->stop();
+    started = false;
+  }
+  return done;
+}
+
+/*! update is een bool die telt de ticks, berekent het gemiddelde omdat er een klein 
+verschil tussen left en right zit en kijkt of averageticks groter is dan targetTicks is
+Als groter dan true, zo niet false.  */
+bool Measurer::update() {
   int16_t countsLeft = encoders.getCountsLeft();
   int16_t countsRight = encoders.getCountsRight();
 
-
-
   int16_t averageTicks = (countsLeft + countsRight) / 2;
 
-
+  float afgelegdeAfstand = (averageTicks / 909.0) * 3.14159 * 2.5;
+  
   if (averageTicks >= targetTicks) {
-    motor->stop();
     Serial.print("Ticks links: ");
     Serial.println(countsLeft);
     Serial.print("Ticks rechts: ");
     Serial.println(countsRight);
-    started = false;   
+    Serial.print("afgelegde cm: ");
+    Serial.println(afgelegdeAfstand);
     return true;
   }
-
-
-  motor->driveForward(200);
-
   return false;
 }

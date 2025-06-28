@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Zumo32U4.h>
 #include <Wire.h>
 #include "Motors.h"
@@ -9,7 +11,7 @@ private:
   bool turnDirection;
   int ticksNeeded;
 public:
-  Turner();
+  Turner(Motors* m);
   void startTurn(int);
   bool update();
 };

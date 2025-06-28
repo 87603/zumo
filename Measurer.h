@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Zumo32U4.h>
 #include <Wire.h>
 #include "Motors.h"
@@ -8,6 +10,7 @@ private:
   Motors *motor;
   int targetTicks;
 public:
-  Measurer();
+  Measurer(Motors *m);
   bool driveForward(int);
+  bool update();
 };
