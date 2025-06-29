@@ -10,7 +10,7 @@
 
 #include "Measurer.h"
 
-Measurer::Measurer(Motors *m) : motor(m)
+Measurer::Measurer() : motor()
 {
   int16_t countsLeft = 0;
   int16_t countsRight = 0;
@@ -30,7 +30,7 @@ bool Measurer::driveForward(int d)
 
     encoders.getCountsAndResetLeft();
     encoders.getCountsAndResetRight();
-    motor->driveForward(200);
+    motor.driveForward(200);
     started = true;
 
   }
@@ -39,7 +39,7 @@ bool Measurer::driveForward(int d)
   // true = stoppen
   bool done = update();
   if (done) {
-    motor->stop();
+    motor.stop();
     started = false;
   }
   return done;

@@ -1,6 +1,6 @@
 #include "Turner.h"
 
-Turner::Turner(Motors* m) : motor(m)
+Turner::Turner() : motor()
 {
   encoders.getCountsAndResetLeft();
   encoders.getCountsAndResetRight();
@@ -23,14 +23,14 @@ bool Turner::update()
   int delta = (left + right) / 2;
 
   if (delta >= ticksNeeded) {
-    motor->stop();
+    motor.stop();
     return true;
   }
 
   if (turnDirection) {
-    motor->tankTurn(300);
+    motor.tankTurn(300);
   } else {
-    motor->tankTurn(-300);
+    motor.tankTurn(-300);
   }
     return false;
 }

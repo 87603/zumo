@@ -7,11 +7,11 @@
 class Turner {
 private:
   Zumo32U4Encoders encoders;
-  Motors *motor;
+  Motors motor;
   bool turnDirection;
   int ticksNeeded;
 public:
-  Turner(Motors* m);
+  Turner();
   void startTurn(int);
   bool update();
 };

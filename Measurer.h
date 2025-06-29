@@ -7,10 +7,10 @@
 class Measurer {
 private:
   Zumo32U4Encoders encoders;
-  Motors *motor;
+  Motors motor;
   int targetTicks;
 public:
-  Measurer(Motors *m);
+  Measurer();
   bool driveForward(int);
   bool update();
 };
