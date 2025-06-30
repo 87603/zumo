@@ -1,32 +1,33 @@
 #include "Retreater.h"
 
-Retreater::Retreater() : measurer(), turner()
-{
-}
+Retreater::Retreater() : measurer(), turner(), mode(0) {}
 
 bool Retreater::startRetreat(int t, int s)
 {
-  //onthoud variabele tussen aanroepen
-  static bool draaienKlaar = false;
-
-  if (!draaienKlaar) {
-    if (turner.startTurn(s)) {
-      draaienKlaar = true;
-    }
-    if (draaienKlaar)
+  afstand = s;  
+  if (mode == 0) {
+    turner.startTurn(t);
+    mode = 1;
+    Serial.println("mode 1");
     return false;
   }
 
-  // draaien is klaar
-  bool rijdenKlaar = measurer.driveForward(t);
-  if (rijdenKlaar) {
-    draaienKlaar = false;  // reset voor volgende keer
-    return true;
-  }
   return false;
 }
 
-void Retreater::update(int s)
-{
 
+void Retreater::update()
+{
+  if (mode == 1) {
+    if (turner.update()) {
+      measurer.driveForward(afstand);
+      Serial.println("mode 2");
+
+      mode = 2;
+    }
+  } 
+
+  if (mode == 2) {
+    measurer.update();
+  }
 }

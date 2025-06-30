@@ -10,39 +10,31 @@
 
 #include "Measurer.h"
 
-Measurer::Measurer() : motor()
+Measurer::Measurer() : motor(), started(false)
 {
   int16_t countsLeft = 0;
   int16_t countsRight = 0;
+  targetTicks = 0;
 }
 
 bool Measurer::driveForward(int d) 
 {
   //reken afstand om naar ticks
-  static bool started = false;
 
   if (!started) {
-    /*! bereken target ticks, gebruik gegeven afstand, deel door pi keer diameter wiel en keer 409. 
+    /*! bereken target ticks, gebruik gegeven afstand, deel door pi keer diameter wiel en keer 909. 
     909 is aantalticks van volledige rotatoei van het wiel. 409 om te stoppen
     wanneer de bumper het doel heeft bereikt. 
     */
-    targetTicks = (d / (3.14159 * 2.5)) * 409;
+    targetTicks = (d / (3.14159 * 2.5)) * 909;
 
     encoders.getCountsAndResetLeft();
     encoders.getCountsAndResetRight();
-    motor.driveForward(200);
     started = true;
 
   }
 
-  // done roept update() aan en checkt of true wordt geretourneerd
-  // true = stoppen
-  bool done = update();
-  if (done) {
-    motor.stop();
-    started = false;
-  }
-  return done;
+  return update();
 }
 
 /*! update is een bool die telt de ticks, berekent het gemiddelde omdat er een klein 
@@ -56,7 +48,10 @@ bool Measurer::update() {
 
   float afgelegdeAfstand = (averageTicks / 909.0) * 3.14159 * 2.5;
   
-  if (averageTicks >= targetTicks) {
+  if (averageTicks < targetTicks) {
+    motor.forwardTurn(200, (countsLeft-countsRight));
+  } else {
+    motor.stop();
     Serial.print("Ticks links: ");
     Serial.println(countsLeft);
     Serial.print("Ticks rechts: ");
@@ -65,5 +60,6 @@ bool Measurer::update() {
     Serial.println(afgelegdeAfstand);
     return true;
   }
+
   return false;
 }

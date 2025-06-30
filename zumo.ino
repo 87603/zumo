@@ -17,12 +17,16 @@ void setup() {
 }
 
 void loop() {
-
-  retreater.startRetreat(90, 8.0)
+  if (!done) {
+    retreater.startRetreat(180, 20.0);
+    done = true;
+  }
+  retreater.update();
   //zo lang driveForward() false is
   // if (!done) {
-  //   done = measurer.driveForward(18.0);
-  // } if (done) {
+  //   done = measurer.driveForward(8.0);
+  // } 
+  // if (done) {
   //   if (!draaienBezig) {
   //     turner.startTurn(90);
   //     draaienBezig = true;

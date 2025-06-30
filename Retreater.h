@@ -7,11 +7,12 @@
 
 class Retreater {
 private:
-  uint8_t mode;
   Measurer measurer;
   Turner turner;
+  int mode;
+  int afstand;
 public:
   Retreater();
   bool startRetreat(int, int);
-  void update(int);
+  void update();
 };
