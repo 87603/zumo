@@ -13,6 +13,6 @@ private:
   int afstand;
 public:
   Retreater();
-  bool startRetreat(int, int);
-  void update();
+  void startRetreat(int, int);
+  bool update();
 };

@@ -1,5 +1,4 @@
 #include "ProximityInterface.h"
-#include "ProximityInterface.h"
 
 ProximityInterface::ProximityInterface() {
     sensorArray.initFrontSensor();  

@@ -10,7 +10,7 @@
 
 #include "Measurer.h"
 
-Measurer::Measurer() : motor(), started(false)
+Measurer::Measurer() : motor()
 {
   int16_t countsLeft = 0;
   int16_t countsRight = 0;
@@ -21,43 +21,68 @@ bool Measurer::driveForward(int d)
 {
   //reken afstand om naar ticks
 
-  if (!started) {
-    /*! bereken target ticks, gebruik gegeven afstand, deel door pi keer diameter wiel en keer 909. 
-    909 is aantalticks van volledige rotatoei van het wiel. 409 om te stoppen
-    wanneer de bumper het doel heeft bereikt. 
-    */
-    targetTicks = (d / (3.14159 * 2.5)) * 909;
+  /*! bereken target ticks, gebruik gegeven afstand, deel door pi keer diameter wiel en keer 909. 
+  909 is aantalticks van volledige rotatoei van het wiel. 409 om te stoppen
+  wanneer de bumper het doel heeft bereikt. 
+  */
+  targetTicks = (d / (3.14159 * 2.5)) * 909;
+  encoders.getCountsAndResetLeft();
+  encoders.getCountsAndResetRight();
 
-    encoders.getCountsAndResetLeft();
-    encoders.getCountsAndResetRight();
-    started = true;
-
-  }
-
-  return update();
+return update();
 }
 
 /*! update is een bool die telt de ticks, berekent het gemiddelde omdat er een klein 
 verschil tussen left en right zit en kijkt of averageticks groter is dan targetTicks is
 Als groter dan true, zo niet false.  */
 bool Measurer::update() {
-  int16_t countsLeft = encoders.getCountsLeft();
-  int16_t countsRight = encoders.getCountsRight();
+  static bool check = false;
+  static bool check1 = false;
 
-  int16_t averageTicks = (countsLeft + countsRight) / 2;
+  int countsLeft = encoders.getCountsLeft();
+  int countsRight = encoders.getCountsRight();
+
+  int averageTicks = (countsLeft + countsRight) / 2;
 
   float afgelegdeAfstand = (averageTicks / 909.0) * 3.14159 * 2.5;
   
-  if (averageTicks < targetTicks) {
-    motor.forwardTurn(200, (countsLeft-countsRight));
+  if (targetTicks > 0) {
+    if (averageTicks < targetTicks) {
+      motor.forwardTurn(200, (countsLeft-countsRight));
+      return false;
+    } else {
+      motor.stop();
+      if (!check) {
+      Serial.print("Ticks links: ");
+      Serial.println(countsLeft);
+      Serial.print("Ticks rechts: ");
+      Serial.println(countsRight);
+      Serial.print("afgelegde cm: ");
+      Serial.println(afgelegdeAfstand);
+      Serial.println();
+      check = true;
+      }
+      return true;
+    }
   } else {
-    motor.stop();
-    Serial.print("Ticks links: ");
-    Serial.println(countsLeft);
-    Serial.print("Ticks rechts: ");
-    Serial.println(countsRight);
-    Serial.print("afgelegde cm: ");
-    Serial.println(afgelegdeAfstand);
+    if (averageTicks > targetTicks) {
+      motor.forwardTurn(-200, (countsRight-countsLeft));
+      return false;
+    } else {
+      motor.stop();
+      if (!check1) {
+      Serial.print("Ticks links: ");
+      Serial.println(countsLeft);
+      Serial.print("Ticks rechts: ");
+      Serial.println(countsRight);
+      Serial.print("afgelegde cm: ");
+      Serial.println(afgelegdeAfstand);
+      Serial.println();
+      check1 = true;
+      }
+      return true;
+    }
+
     return true;
   }
 

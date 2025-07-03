@@ -9,9 +9,9 @@ private:
   Zumo32U4Encoders encoders;
   Motors motor;
   bool turnDirection;
-  int ticksNeeded;
+  uint16_t ticksNeeded;
 public:
   Turner();
-  void startTurn(int);
+  void startTurn(uint16_t);
   bool update();
 };

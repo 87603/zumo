@@ -9,7 +9,6 @@ private:
   Zumo32U4Encoders encoders;
   Motors motor;
   int targetTicks;
-  bool started;
 public:
   Measurer();
   bool driveForward(int);
