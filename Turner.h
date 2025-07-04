@@ -12,6 +12,6 @@ private:
   uint16_t ticksNeeded;
 public:
   Turner();
-  void startTurn(uint16_t);
+  void startTurn(int);
   bool update();
 };

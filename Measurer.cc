@@ -17,7 +17,7 @@ Measurer::Measurer() : motor()
   targetTicks = 0;
 }
 
-bool Measurer::driveForward(int d) 
+bool Measurer::driveForward(float d) 
 {
   //reken afstand om naar ticks
 
@@ -36,15 +36,13 @@ return update();
 verschil tussen left en right zit en kijkt of averageticks groter is dan targetTicks is
 Als groter dan true, zo niet false.  */
 bool Measurer::update() {
-  static bool check = false;
-  static bool check1 = false;
 
   int countsLeft = encoders.getCountsLeft();
   int countsRight = encoders.getCountsRight();
 
   int averageTicks = (countsLeft + countsRight) / 2;
 
-  float afgelegdeAfstand = (averageTicks / 909.0) * 3.14159 * 2.5;
+  int afgelegdeAfstand = (averageTicks / 909.0) * 3.14159 * 2.5;
   
   if (targetTicks > 0) {
     if (averageTicks < targetTicks) {
@@ -52,34 +50,14 @@ bool Measurer::update() {
       return false;
     } else {
       motor.stop();
-      if (!check) {
-      Serial.print("Ticks links: ");
-      Serial.println(countsLeft);
-      Serial.print("Ticks rechts: ");
-      Serial.println(countsRight);
-      Serial.print("afgelegde cm: ");
-      Serial.println(afgelegdeAfstand);
-      Serial.println();
-      check = true;
       }
       return true;
-    }
   } else {
     if (averageTicks > targetTicks) {
       motor.forwardTurn(-200, (countsRight-countsLeft));
       return false;
     } else {
       motor.stop();
-      if (!check1) {
-      Serial.print("Ticks links: ");
-      Serial.println(countsLeft);
-      Serial.print("Ticks rechts: ");
-      Serial.println(countsRight);
-      Serial.print("afgelegde cm: ");
-      Serial.println(afgelegdeAfstand);
-      Serial.println();
-      check1 = true;
-      }
       return true;
     }
 

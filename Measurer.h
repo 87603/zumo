@@ -8,9 +8,9 @@ class Measurer {
 private:
   Zumo32U4Encoders encoders;
   Motors motor;
-  int targetTicks;
+  float targetTicks;
 public:
   Measurer();
-  bool driveForward(int);
+  bool driveForward(float);
   bool update();
 };

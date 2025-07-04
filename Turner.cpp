@@ -1,4 +1,3 @@
-#include "USBAPI.h"
 #include "Turner.h"
 
 Turner::Turner() : motor()
@@ -6,11 +5,11 @@ Turner::Turner() : motor()
   encoders.getCountsAndResetLeft();
   encoders.getCountsAndResetRight();
 }
-void Turner::startTurn(uint16_t degrees)
+void Turner::startTurn(int degrees)
 {
   // Gebruik het teken van degrees om richting te bepalen
   int deg = abs(degrees);
-  float afstand = (3.14159 * 9.7 * deg) / (2 * 360.0); // pi * wheelbase
+  float afstand = (3.14159 * 10 * deg) / (2 * 360.0); // pi * wheelbase
   float omtrek = 3.14159 * 2.5; // pi * wiel diameter
 
   ticksNeeded = (afstand / omtrek) * 909;
@@ -38,6 +37,7 @@ bool Turner::update()
     motor.stop();
     Serial.print("Gemiddelde ticks: ");
     Serial.println(gemiddeldeTicks);
+ 
     Serial.println();
 
     return true;

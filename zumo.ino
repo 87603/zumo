@@ -18,7 +18,7 @@ void setup() {
 
 void loop() {
   if (!done) {
-    retreater.startRetreat(360, 0);
+    retreater.startRetreat(0, 20.0);
     done = true;
   }
   
