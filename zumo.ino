@@ -54,6 +54,9 @@ void loop() {
     blockPusher.loop();
 
     if (blockPusher.isGestopt()) {
+    // afstand in cm omrekenen naar tijd in milliseconden
+    // afstand / snelheid
+    // maal 1000 om seconden naar milliseconden te maken
       retreater.startRetreat(180, ((afstand/17.95)*1000));
       retreatGestart = true;
     }
