@@ -3,8 +3,7 @@
 Retreater::Retreater() : measurer(), turner(), mode(0) {}
 
 
-/*! Start met draaihoek en afstand, als mode 0 is
-gaat hij draaien */
+/*! Start met draaihoek en afstand */
 void Retreater::startRetreat(int t,  long s)
 {
   afstand = s;  

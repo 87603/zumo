@@ -31,6 +31,8 @@ bool blockPusherGestart = false;
 
 /** Status of Retreater gestart is. */
 bool retreatGestart = false;
+
+/*! afstand voor rijden */
 int afstand = 100;
 
 /** Initialiseer seriële communicatie en BlockPusher. */
@@ -52,8 +54,7 @@ void loop() {
     blockPusher.loop();
 
     if (blockPusher.isGestopt()) {
-      retreater.startRetreat(360, ((afstand/17.95)*1000));
-      Serial.println("Retreat gestart");
+      retreater.startRetreat(180, ((afstand/17.95)*1000));
       retreatGestart = true;
     }
   }
