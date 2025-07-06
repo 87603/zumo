@@ -1,3 +1,13 @@
+/**
+ * @file Motors.cc
+ * @author Lars, Ivo & Lucas
+ * @brief 
+ * @version 0.1
+ * @date 2025-07-05
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "Motors.h"
 
 Motors::Motors()
